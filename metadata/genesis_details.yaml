@@ -1,0 +1,47 @@
+# JOC mainnet — execution-layer genesis, as produced by ./genesis.json
+# Verified against https://rpc-3.japanopenchain.org (eth_getBlockByNumber 0x0)
+# on 2026-08-25. Reproduce with ../../scripts/verify_genesis.sh joc
+
+chain_id: 81
+network_id: 81
+consensus: clique
+
+genesis_hash: 0x1b54bfa6846a13aacc57066840ec10d1b74b06870539bbc8a3d1b19bdc566733
+genesis_state_root: 0xd2d0aea6aeaecae665789341c002816e8636c868cfe9d19eed375bc78338a900
+genesis_parent_hash: 0x0000000000000000000000000000000000000000000000000000000000000000
+
+genesis_time: 1543235253  # 2018-11-26T12:27:33Z
+gas_limit: 470000000      # 0x1c03a180
+difficulty: 1
+nonce: 0x0000000000000000
+mix_hash: 0x0000000000000000000000000000000000000000000000000000000000000000
+coinbase: 0x0000000000000000000000000000000000000000
+
+clique:
+  period: 5      # seconds per block
+  epoch: 30000   # blocks per checkpoint
+  # Initial signer set, encoded in genesis extraData
+  genesis_signers:
+    - 0x32a082eef14ce3842c695832fd3217081b3380f4
+
+# Fork activation blocks (all pre-Berlin forks active from block 0)
+forks:
+  homestead: 0
+  eip150: 0
+  eip155: 0
+  eip158: 0
+  byzantium: 0
+  constantinople: 0
+  petersburg: 0
+  istanbul: 0
+  muir_glacier: 0
+  berlin: 7970411
+  london: 7970411
+  # Shanghai and later activate at the PoA -> PoS migration. See ../../pos-migration/.
+
+# Genesis allocation
+alloc_summary:
+  precompile_placeholders: 256          # 0x00..0x00 through 0x00..0xff, 1 wei each
+  funded:
+    - address: 0xa3b77d1fa25c01486e2394bdd4c72c44a99e77c1
+      balance_wei: 1000000000000000000000000000  # 1,000,000,000 JOC
