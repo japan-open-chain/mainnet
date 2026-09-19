@@ -1,0 +1,19 @@
+# Consensus-layer bootstrap nodes (ENRs) for JOC mainnet (chain id 81).
+#
+# Liveness is proven, not dialled: ../scripts/discv5_probe.py makes each node
+# answer WHOAREYOU, which only a node whose id is keccak256 of the key in its
+# own record can do.
+#
+# Execution-layer counterpart: ./enodes.yaml
+#
+# Pass to a consensus client with:
+#   lighthouse beacon_node --testnet-dir metadata \
+#     --boot-nodes "$(sed -n 's/^-[[:space:]]*\(enr:[^[:space:]#]*\).*$/\1/p' \
+#                     metadata/bootstrap_nodes.yaml | paste -sd, -)"
+
+# Dedicated discv5 bootnode: udp 9000 only, no tcp, no eth2 entry.
+- enr:-IS4QCD8WwWL4D2aqhxck-Xe2oWmKOxX8MIfTSIbm8NUSO2cIl1-ajvVhI3qtIKYZCLWnIwUOctRuphmdsKsoEn_WXsBgmlkgnY0gmlwhDbHWLWJc2VjcDI1NmsxoQJ0qmTB_5PvfYu4xOKPPSdK_GDkeeKB30pII1nZBfTCSIN1ZHCCIyg  # 54.199.88.181:9000 udp
+# Beacon node: tcp/udp 9000, quic 9001. Its eth2 entry carries fork digest
+# 0x4fdcccde — Bellatrix (0x02000051) over this chain's genesis_validators_root,
+# so the record is bound to this network, not another.
+- enr:-N24QEseGCZiwkxELcFEQbB1uXCztP9tbz06fuGwO0oMqRhHQJUlbAp7irqbsoj050k-eB9_ce5nu-yxxiJtoHgPQ9YDh2F0dG5ldHOIAAAAAAMAAACGY2xpZW500YpMaWdodGhvdXNlhTcuMC4xhGV0aDKQT9zM3gIAAFH__________4JpZIJ2NIJpcIQ2-PdmhHF1aWOCIymJc2VjcDI1NmsxoQI2lQsosw7dw7ssqdwQZ6U580ZG4Gtlqem1RTbH-LDgXIhzeW5jbmV0cwCDdGNwgiMog3VkcIIjKA  # 54.248.247.102:9000 tcp+udp

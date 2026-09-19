@@ -37,7 +37,24 @@ forks:
   muir_glacier: 0
   berlin: 7970411
   london: 7970411
-  # Shanghai and later activate at the PoA -> PoS migration. See ../../pos-migration/.
+  # Shanghai and later are not scheduled. The beacon chain is live but the merge
+  # is not set: TERMINAL_TOTAL_DIFFICULTY is max uint64 in ./config.yaml, and
+  # ./genesis.json carries no merge fields. See ../README.md#beacon-chain.
+
+# Merge
+merge:
+  terminal_total_difficulty: 18446744073709551615  # 2**64-1 — unreachable, i.e. not scheduled
+  # Clique adds 1 difficulty per 5-second block; total difficulty was 45589404
+  # at block 26040205 (2026-09-19T13:54:38Z).
+
+# Deposit contract
+# ---------------------------------------------------------------
+# See ./config.yaml. The beacon chain seeded from it is live; genesis state in ./genesis.ssz.
+deposit_contract_address: 0x6A5452FC9a733FF4634aB562Dcec440c5f3d52f5
+deposit_contract_block: 26016124        # 2026-09-18T04:26:45Z, tx 0xaf9ef541…13dc5;
+                                        # internal CREATE from factory
+                                        # 0x2bff8c48…f09e at nonce 3. See ../README.md.
+deposit_contract_block_hash: 0xe288afeaebab82d7d95fecfbbc5098f2eadc682fe62e55e42702dda3e56cfd2a
 
 # Genesis allocation
 alloc_summary:
