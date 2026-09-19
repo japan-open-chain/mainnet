@@ -65,8 +65,8 @@ address: `/eth/v1/config/deposit_contract` answers `chain_id 81`, this address.
 
 ### Finding the deployment block took some care
 
-The obvious route does not work. This node prunes state — `eth_getCode` at the
-deployment block fails with `missing trie node`, so a binary search over
+The obvious route does not work. The public RPC prunes state — `eth_getCode` at
+the deployment block fails with `missing trie node`, so a binary search over
 history is out.
 
 The explorer names creation transaction `0xaf9ef541…13dc5`, and the node's own
@@ -87,10 +87,10 @@ nonce 4 -> 0x51075842…dd8f   [emitted a log in the tx]
 ```
 
 Nonces 1, 2 and 4 are three of the addresses that emitted logs in that
-transaction, per the node's own receipt. Nonces are sequential, so the nonce-3
+transaction, per the receipt the RPC serves. Nonces are sequential, so the nonce-3
 creation cannot have happened later than the nonce-4 one — the deposit contract
 was created in that transaction, in block `26016124`. Only the list of internal
-creations came from the explorer; everything load-bearing came from the node.
+creations came from the explorer; everything load-bearing came from the RPC.
 
 Reproduce the derivation with:
 
@@ -202,7 +202,7 @@ Ethereum mainnet's 12s. The preset sets `SLOTS_PER_EPOCH` to 16, so an epoch is
 ### `genesis.ssz` comes from the node, not from a script
 
 [`metadata/genesis.ssz`](metadata/genesis.ssz) is the beacon node's own genesis
-state, taken from `/eth/v2/debug/beacon/states/genesis` (Lighthouse v7.0.1) —
+state, taken from a consensus client's `/eth/v2/debug/beacon/states/genesis` —
 not rebuilt from the eth1 deposits. Its decoded header (`genesis_time`,
 `genesis_validators_root`, fork version `0x00000051`, slot 0) matches the node's
 `/eth/v1/beacon/genesis`, and every key
