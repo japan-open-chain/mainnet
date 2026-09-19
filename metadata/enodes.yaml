@@ -11,7 +11,5 @@
 #   geth --bootnodes "$(sed -n 's/^-[[:space:]]*\(enode:\/\/[^[:space:]#]*\).*$/\1/p' \
 #                       enodes.yaml | paste -sd, -)"
 
-# Added 2026-09-19 with the beacon chain going live, replacing the two
-# published previously (13.56.117.179 and 54.241.98.152, both aws-us-west-1).
 - enode://a309a5b07daa6cc7c15e08f6a46b8ff9eac5700cea1e24a2d8038d1a950555dcd6a11a3ca699f0701fcb19f76c375bfa486c26ca1eeb6548e3c0185cb0cd879f@52.193.38.9:30303  # aws-ap-northeast-1
 - enode://ae31b922085eb3b3e4d62cff1797ba61176af32f409be7c2c1cd22193e0109ee6dfe36be3a54af7b394bb36fa5004a4a499ffb4a81916b88aeb82f9ef74f02b3@54.248.247.102:30303  # aws-ap-northeast-1, same host as the 2nd ENR in ./bootstrap_nodes.yaml
