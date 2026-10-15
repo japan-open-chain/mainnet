@@ -6,8 +6,8 @@ blocks, live since 2018-11-26.
 This directory contains the chain metadata, configuration parameters and
 genesis information for JOC mainnet, execution and consensus layer both. The
 beacon chain is live — genesis fired 2026-09-18T11:44:51Z — and **the merge is
-scheduled**: the execution layer merges once its total difficulty passes
-`TERMINAL_TOTAL_DIFFICULTY` 47370500, which it reaches around 2026-11-27.
+scheduled**: the execution layer merges at the first block whose total
+difficulty reaches `TERMINAL_TOTAL_DIFFICULTY` 47370500, around 2026-11-27.
 
 Everything in [`metadata/`](metadata/) is verified against the live network by
 CI.
@@ -165,8 +165,9 @@ a finalized checkpoint tracking the head.
 **The merge is scheduled.** Both layers carry the same number: the beacon
 node's `/eth/v1/config/spec` reports `47370500`, and
 [`metadata/genesis.json`](metadata/genesis.json) sets `terminalTotalDifficulty`
-to the same value — supplied by the operators, and identical to the CI-proven
-file in every other field.
+to the same value. `scripts/verify_genesis.sh` checks that the two agree, and
+fails CI if they ever drift — a consensus layer and an execution layer with
+different terminal difficulties would part ways at the merge.
 
 Turning that number into a date is arithmetic on Clique: a block is worth 2
 difficulty when its signer is in turn and 1 when it is not, which measures out
@@ -177,9 +178,10 @@ what moves that date: all in-turn would arrive 2026-11-16, all out-of-turn
 2026-12-18. Recompute it rather than trusting the figure printed here:
 
 ```bash
-curl -sS -X POST -H 'Content-Type: application/json' \
+printf 'total difficulty %d of 47370500\n' "$(curl -sS -X POST \
+  -H 'Content-Type: application/json' \
   --data '{"jsonrpc":"2.0","id":1,"method":"eth_getBlockByNumber","params":["latest",false]}' \
-  https://rpc-3.japanopenchain.org | jq -r '.result.totalDifficulty'
+  https://rpc-3.japanopenchain.org | jq -r '.result.totalDifficulty')"
 ```
 
 **Withdrawals do not exist yet.** Capella is still parked at `2**64-1` and
