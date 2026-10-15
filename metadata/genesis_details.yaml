@@ -37,15 +37,17 @@ forks:
   muir_glacier: 0
   berlin: 7970411
   london: 7970411
-  # Shanghai and later are not scheduled. The beacon chain is live but the merge
-  # is not set: TERMINAL_TOTAL_DIFFICULTY is max uint64 in ./config.yaml, and
-  # ./genesis.json carries no merge fields. See ../README.md#beacon-chain.
+  # The merge is scheduled at TERMINAL_TOTAL_DIFFICULTY 47370500 (~2026-11-27);
+  # Shanghai and later are not. See ./config.yaml and ../README.md#beacon-chain.
 
 # Merge
 merge:
-  terminal_total_difficulty: 18446744073709551615  # 2**64-1 — unreachable, i.e. not scheduled
-  # Clique adds 1 difficulty per 5-second block; total difficulty was 45589404
-  # at block 26040205 (2026-09-19T13:54:38Z).
+  terminal_total_difficulty: 47370500  # in ./genesis.json and the beacon spec;
+                                       # terminal PoW block and first PoS block
+                                       # recorded here once reached
+  # Clique adds 2 difficulty for an in-turn block and 1 otherwise, ~1.5 per
+  # 5-second block measured; total difficulty was 46259930 at block 26485931
+  # (2026-10-15T09:16:37Z), leaving ~1.11M to go.
 
 # Deposit contract
 # ---------------------------------------------------------------

@@ -99,4 +99,34 @@ else
   bad "genesis.json config.chainId=$gj_chain_id, chain.json=$expected_chain_id"
 fi
 
+# 4. The merge is a number that has to be the same in three places. A consensus
+# layer and an execution layer with different terminal difficulties do not merge
+# together, they part ways, and nothing else here would notice a typo.
+cfg_ttd="$(sed -n 's/^TERMINAL_TOTAL_DIFFICULTY:[[:space:]]*\([0-9]*\).*$/\1/p' \
+           "$META/config.yaml" | head -n1)"
+det_ttd="$(sed -n 's/^[[:space:]]*terminal_total_difficulty:[[:space:]]*\([0-9]*\).*$/\1/p' \
+           "$META/genesis_details.yaml" | head -n1)"
+gj_ttd="$(jq -r '.config.terminalTotalDifficulty // "unset"' "$META/genesis.json")"
+
+if [ -z "$cfg_ttd" ]; then
+  note "skipped" "config.yaml sets no TERMINAL_TOTAL_DIFFICULTY"
+elif [ "$cfg_ttd" = "$gj_ttd" ] && [ "$cfg_ttd" = "$det_ttd" ]; then
+  ok "terminal total difficulty $cfg_ttd agrees across config.yaml, genesis.json and genesis_details.yaml"
+else
+  bad "terminal total difficulty disagrees: config.yaml=$cfg_ttd genesis.json=$gj_ttd genesis_details.yaml=$det_ttd"
+fi
+
+# Say where the chain is against that number, so a merge that has already
+# happened cannot sit here described as upcoming.
+live_td_hex="$(rpc_call "$rpc" eth_getBlockByNumber '["latest",false]' \
+               | jq -r '.result.totalDifficulty // empty')"
+if [ -n "$live_td_hex" ] && [ -n "$cfg_ttd" ]; then
+  live_td="$((live_td_hex))"
+  if [ "$live_td" -ge "$cfg_ttd" ]; then
+    note "merge" "reached: total difficulty $live_td >= $cfg_ttd"
+  else
+    note "merge" "pending: total difficulty $live_td, $((cfg_ttd - live_td)) to go"
+  fi
+fi
+
 exit $fail
