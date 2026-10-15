@@ -5,9 +5,9 @@ blocks, live since 2018-11-26.
 
 This directory contains the chain metadata, configuration parameters and
 genesis information for JOC mainnet, execution and consensus layer both. The
-beacon chain is live — genesis fired 2026-09-18T11:44:51Z. **The merge is not
-scheduled:** `TERMINAL_TOTAL_DIFFICULTY` is max uint64, so the execution layer
-still runs Clique and follows its own head.
+beacon chain is live — genesis fired 2026-09-18T11:44:51Z — and **the merge is
+scheduled**: the execution layer merges once its total difficulty passes
+`TERMINAL_TOTAL_DIFFICULTY` 47370500, which it reaches around 2026-11-27.
 
 Everything in [`metadata/`](metadata/) is verified against the live network by
 CI.
@@ -157,19 +157,36 @@ confirmed both by computing that sum and by the node.
 | `GENESIS_FORK_VERSION` | `0x00000051` — low bytes are chain id `81` |
 | Forks active | Altair epoch 5, Bellatrix epoch 10 — both long passed |
 | Forks disabled | Capella onwards, at `2**64-1` |
-| `TERMINAL_TOTAL_DIFFICULTY` | `2**64-1` — unreachable, so the merge is not scheduled |
+| `TERMINAL_TOTAL_DIFFICULTY` | `47370500` — set 2026-10-15, reached around 2026-11-27 |
 
 The chain finalizes: all 8 validators are `active_ongoing`, and the node reports
 a finalized checkpoint tracking the head.
 
-**The merge is not scheduled.** Bellatrix is active on the beacon chain, but a
-beacon chain at Bellatrix does not merge anything until the execution layer
-passes `TERMINAL_TOTAL_DIFFICULTY`, and that is parked at max uint64 in
-[`metadata/config.yaml`](metadata/config.yaml) — the running node's
-`/eth/v1/config/spec` reports the same value. [`metadata/genesis.json`](metadata/genesis.json)
-accordingly carries no merge fields. Scheduling the merge means setting a real
-TTD in both files; JOC's Clique layer accumulates 1 difficulty per 5-second
-block, which is what makes a date out of a number.
+**The merge is scheduled.** Both layers carry the same number: the beacon
+node's `/eth/v1/config/spec` reports `47370500`, and
+[`metadata/genesis.json`](metadata/genesis.json) sets `terminalTotalDifficulty`
+to the same value — supplied by the operators, and identical to the CI-proven
+file in every other field.
+
+Turning that number into a date is arithmetic on Clique: a block is worth 2
+difficulty when its signer is in turn and 1 when it is not, which measures out
+at **~1.5 per 5-second block** on this chain. Total difficulty was `46259930`
+at block `26485931` (2026-10-15T09:16:37Z), leaving ~1.11M to go — about **43
+days**, so roughly **2026-11-27**. The mix of in-turn and out-of-turn blocks is
+what moves that date: all in-turn would arrive 2026-11-16, all out-of-turn
+2026-12-18. Recompute it rather than trusting the figure printed here:
+
+```bash
+curl -sS -X POST -H 'Content-Type: application/json' \
+  --data '{"jsonrpc":"2.0","id":1,"method":"eth_getBlockByNumber","params":["latest",false]}' \
+  https://rpc-3.japanopenchain.org | jq -r '.result.totalDifficulty'
+```
+
+**Withdrawals do not exist yet.** Capella is still parked at `2**64-1` and
+`metadata/genesis.json` has no `shanghaiTime`, so after the merge a validator
+can exit but its balance stays on the beacon chain until Capella and Shanghai
+are scheduled. That is the same order Ethereum took — merge first, withdrawals
+seven months later — but it is a decision, not an oversight.
 
 ### The published ENRs belong to this chain
 
@@ -221,9 +238,9 @@ wrong file here would make clients compute fork digests matching no peer.
 
 ## Run a node
 
-The execution layer is Clique PoA and follows the head on its own; the merge is
-not scheduled (see [Beacon chain](#beacon-chain)), so a consensus client is
-needed only to follow or validate on the beacon chain.
+The execution layer is Clique PoA and follows the head on its own **until the
+merge** (~2026-11-27, see [Beacon chain](#beacon-chain)); after it, both layers
+are required.
 
 ### Execution layer
 

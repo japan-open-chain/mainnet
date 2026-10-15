@@ -20,10 +20,11 @@ CONFIG_NAME: joc
 
 # Transition
 # ---------------------------------------------------------------
-# Max uint64: unreachable, so the merge is NOT scheduled. The beacon chain runs
-# alongside the Clique execution layer until a real TTD is set here and in
-# ./genesis.json. Matches the running beacon node's /eth/v1/config/spec.
-TERMINAL_TOTAL_DIFFICULTY: 18446744073709551615
+# Set 2026-10-15. Clique adds 2 difficulty for an in-turn block and 1 otherwise,
+# ~1.5 per 5-second block in practice, so the chain reaches this around
+# 2026-11-27. Also in ./genesis.json, and matches the running beacon node's
+# /eth/v1/config/spec.
+TERMINAL_TOTAL_DIFFICULTY: 47370500
 # By default, do not use these params
 TERMINAL_BLOCK_HASH: 0x0000000000000000000000000000000000000000000000000000000000000000
 TERMINAL_BLOCK_HASH_ACTIVATION_EPOCH: 18446744073709551615
@@ -48,7 +49,9 @@ GENESIS_DELAY: 6000
 # ---------------------------------------------------------------
 # Capella onwards is disabled at max uint64, and may be re-assigned to another
 # fork version later. Altair (epoch 5) and Bellatrix (epoch 10) are both long
-# active; the merge itself still waits on TERMINAL_TOTAL_DIFFICULTY above.
+# active, and the merge is scheduled at TERMINAL_TOTAL_DIFFICULTY above. Until
+# Capella is scheduled there are no withdrawals: a validator can exit, but its
+# balance stays on the beacon chain.
 
 # Altair
 ALTAIR_FORK_VERSION: 0x01000051
