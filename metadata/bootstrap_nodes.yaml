@@ -11,9 +11,8 @@
 #     --boot-nodes "$(sed -n 's/^-[[:space:]]*\(enr:[^[:space:]#]*\).*$/\1/p' \
 #                     metadata/bootstrap_nodes.yaml | paste -sd, -)"
 
-# Dedicated discv5 bootnode: udp 9000 only, no tcp, no eth2 entry.
-- enr:-IS4QCD8WwWL4D2aqhxck-Xe2oWmKOxX8MIfTSIbm8NUSO2cIl1-ajvVhI3qtIKYZCLWnIwUOctRuphmdsKsoEn_WXsBgmlkgnY0gmlwhDbHWLWJc2VjcDI1NmsxoQJ0qmTB_5PvfYu4xOKPPSdK_GDkeeKB30pII1nZBfTCSIN1ZHCCIyg  # 54.199.88.181:9000 udp
-# Beacon node: tcp/udp 9000, quic 9001. Its eth2 entry carries fork digest
-# 0x4fdcccde — Bellatrix (0x02000051) over this chain's genesis_validators_root,
-# so the record is bound to this network, not another.
-- enr:-N24QEseGCZiwkxELcFEQbB1uXCztP9tbz06fuGwO0oMqRhHQJUlbAp7irqbsoj050k-eB9_ce5nu-yxxiJtoHgPQ9YDh2F0dG5ldHOIAAAAAAMAAACGY2xpZW500YpMaWdodGhvdXNlhTcuMC4xhGV0aDKQT9zM3gIAAFH__________4JpZIJ2NIJpcIQ2-PdmhHF1aWOCIymJc2VjcDI1NmsxoQI2lQsosw7dw7ssqdwQZ6U580ZG4Gtlqem1RTbH-LDgXIhzeW5jbmV0cwCDdGNwgiMog3VkcIIjKA  # 54.248.247.102:9000 tcp+udp
+# Dedicated discv5 bootnodes: udp 9000 only, no tcp, no eth2 entry.
+# Added 2026-10-27, replacing the two published previously (54.199.88.181 and
+# 54.248.247.102).
+- enr:-IS4QN-5xInZgf5W53byTYQkpC47akSmcH70sWQYaBBgN9jLYHltJn-Z8caz3TtWYJr6v-VukAhZhcFXsSXd_44lK_UBgmlkgnY0gmlwhA2fxHCJc2VjcDI1NmsxoQI7VuK6h3X_UseemLI1VZeEEl87wgyf9aUWGDCCZ-iYK4N1ZHCCIyg  # 13.159.196.112:9000 udp
+- enr:-IS4QNKxaOT2oU1EiC4xl9dUsL8vay6QLx4mDEDACL22KiANAONQGXqrL1NHc07p0mKCVXsmiW6MOrerf8K2ImXcCR4BgmlkgnY0gmlwhDTG94yJc2VjcDI1NmsxoQNTBO3BsNPC9u_Z6gOg6ppZRl9EQ1UDnhkZnVm5QSazBYN1ZHCCIyg  # 52.198.247.140:9000 udp
