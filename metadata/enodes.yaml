@@ -5,5 +5,7 @@
 #   geth --bootnodes "$(sed -n 's/^-[[:space:]]*\(enode:\/\/[^[:space:]#]*\).*$/\1/p' \
 #                       enodes.yaml | paste -sd, -)"
 
-- enode://a309a5b07daa6cc7c15e08f6a46b8ff9eac5700cea1e24a2d8038d1a950555dcd6a11a3ca699f0701fcb19f76c375bfa486c26ca1eeb6548e3c0185cb0cd879f@52.193.38.9:30303
-- enode://ae31b922085eb3b3e4d62cff1797ba61176af32f409be7c2c1cd22193e0109ee6dfe36be3a54af7b394bb36fa5004a4a499ffb4a81916b88aeb82f9ef74f02b3@54.248.247.102:30303
+# Added 2026-10-27, replacing the two published previously (52.193.38.9 and
+# 54.248.247.102).
+- enode://8b63e3a1e813abf8161d93927110e70dc3e67f68bc646223c2577adedc3f8851817793aed1d3295bc66cb6cb732901a3d6d6c1d19eb7a73d6eb5ed8a351d34a4@35.78.149.60:30303  # aws-ap-northeast-1
+- enode://c4932c2dd202e7d0480860a97eba80f352d931d896d48ec43a55126806769cfcbe22666efc43f9aea510b5aa7be98eb20d9d9ec1a236309e158787356da5126a@57.182.159.64:30303  # aws-ap-northeast-1
